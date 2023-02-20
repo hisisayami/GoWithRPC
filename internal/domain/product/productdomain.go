@@ -9,14 +9,14 @@ import (
 )
 
 type ProductDomain interface {
-	CreateProduct(ctx context.Context, productmodel model.Product) (model.Product, error)
+	CreateProduct(ctx context.Context, catId int32, productmodel model.Product) (model.Product, error)
 }
 
 type productDomain struct {
 	productRepo product.Repository
 }
 
-func New(productRepo product.Repository) *ProductDomain {
+func New(productRepo product.Repository) ProductDomain {
 	s := &productDomain{
 		productRepo: productRepo,
 	}
@@ -24,7 +24,7 @@ func New(productRepo product.Repository) *ProductDomain {
 	return s
 }
 
-func (s *productDomain) CreateProduct(ctx context.Context, catId int, productmodel model.Product) (model.Product, error) {
+func (s *productDomain) CreateProduct(ctx context.Context, catId int32, productmodel model.Product) (model.Product, error) {
 	entClient := config.GetClient()
 
 	product, err := product.New(ctx, entClient).CreateProduct(ctx, catId, productmodel)

@@ -27,7 +27,7 @@ func New(ctx context.Context, client *ent.Client) *ProductRepo {
 	}
 }
 
-func (r *ProductRepo) CreateProduct(ctx context.Context, catId int, productmodel model.Product) (*ent.Product, error) {
+func (r *ProductRepo) CreateProduct(ctx context.Context, catId int32, productmodel model.Product) (*ent.Product, error) {
 
 	productCreated, err := r.client.Product.Create().
 		SetProductID(productmodel.ProductId).
