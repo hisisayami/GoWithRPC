@@ -39,19 +39,19 @@ func main() {
 		fmt.Println("Failed to set up  DB")
 	}
 
-	staffRepo := staffRepo.New(db)
-
-	staffD := staffDomain.New(staffRepo)
-
-	serv := server.New(db, cfg, staffD)
-
 	httpClient := http.DefaultClient
-	httpClient.Timeout = 10 * time.Second
+	httpClient.Timeout = 100 * time.Second
 
 	// staff client
-	staffClient := staffClient.New(httpClient, "")
+	staffClient := staffClient.New(httpClient, cfg.ExternalAPI.Host)
 
-	_ = staffExternal.New(staffClient)
+	staffExternal := staffExternal.New(staffClient)
+
+	staffRepo := staffRepo.New(db)
+
+	staffD := staffDomain.New(staffRepo, staffExternal)
+
+	serv := server.New(db, cfg, staffD)
 
 	if err := serv.Start(); err != nil {
 		fmt.Println("Failed to start service")

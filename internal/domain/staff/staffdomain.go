@@ -2,11 +2,19 @@ package staff
 
 import (
 	"context"
+	"fmt"
 
 	"example.com/go-inventory-grpc/ent"
+	staffExternal "example.com/go-inventory-grpc/internal/domain/external/staff"
 	staffModel "example.com/go-inventory-grpc/internal/model"
 	staffRepository "example.com/go-inventory-grpc/internal/repository/staff"
+
 	"github.com/pkg/errors"
+)
+
+const (
+	REJECTED string = "REJECTED"
+	APPROVED string = "APPROVED"
 )
 
 type StaffDomain interface {
@@ -18,18 +26,48 @@ type StaffDomain interface {
 }
 
 type staffDomain struct {
-	staffRepo staffRepository.Repository
+	staffRepo     staffRepository.Repository
+	staffExternal staffExternal.StaffApi
 }
 
-func New(staffRepo staffRepository.Repository) StaffDomain {
+func New(staffRepo staffRepository.Repository, staffExternal staffExternal.StaffApi) StaffDomain {
 	s := &staffDomain{
-		staffRepo: staffRepo,
+		staffRepo:     staffRepo,
+		staffExternal: staffExternal,
 	}
 
 	return s
 }
 
 func (s *staffDomain) StaffCre(ctx context.Context, staffDetails staffModel.Staff) (staffModel.Staff, error) {
+
+	res, err := s.staffExternal.Validate(ctx, staffDetails.Name, staffDetails.Name, "12313212")
+	if err != nil {
+		return staffModel.Staff{}, err
+	}
+
+	fmt.Println("res", res)
+
+	switch res.Status {
+	case REJECTED:
+		fmt.Println("need to created staff by phone number")
+		var staffDBRes1 = staffModel.Staff{
+			Id:    1,
+			Name:  REJECTED,
+			Email: REJECTED,
+		}
+		return staffDBRes1, nil
+	case APPROVED:
+		fmt.Println("staff can be crated by normal flow")
+		var staffDBRes2 = staffModel.Staff{
+			Id:    1,
+			Name:  APPROVED,
+			Email: APPROVED,
+		}
+		return staffDBRes2, nil
+	default:
+		fmt.Println("staff can be crated by normal flow")
+	}
 
 	staff, err := s.staffRepo.StaffCre(ctx, staffDetails)
 	if err != nil {

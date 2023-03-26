@@ -6,7 +6,6 @@ import (
 	staffDomain "example.com/go-inventory-grpc/internal/domain/staff"
 	staffModel "example.com/go-inventory-grpc/internal/model"
 	repo "example.com/go-inventory-grpc/internal/repository"
-	staffRepo "example.com/go-inventory-grpc/internal/repository/staff"
 
 	"github.com/pkg/errors"
 
@@ -77,10 +76,8 @@ func (s *server) CreateStaff(ctx context.Context, message *CreateStaffRequest) (
 
 func (s *server) GetStaffById(ctx context.Context, message *GetStaffByIdRequest) (*GetStaffByIdResponse, error) {
 	log.Printf("Get staff request: %s", message)
-	staffRepo := staffRepo.New(s.db)
-	staffDomain := staffDomain.New(staffRepo)
 
-	getStaff, err := staffDomain.GetStaffById(ctx, int(message.Id))
+	getStaff, err := s.staffD.GetStaffById(ctx, int(message.Id))
 	if err != nil {
 		return &GetStaffByIdResponse{}, err
 	}
@@ -93,10 +90,8 @@ func (s *server) GetStaffById(ctx context.Context, message *GetStaffByIdRequest)
 }
 
 func (s *server) DeleteStaffById(ctx context.Context, message *DeleteStaffByIdRequest) (*DeleteStaffByIdResponse, error) {
-	staffRepo := staffRepo.New(s.db)
-	staffDomain := staffDomain.New(staffRepo)
 
-	err := staffDomain.DeleteStaffById(ctx, int(message.Id))
+	err := s.staffD.DeleteStaffById(ctx, int(message.Id))
 	if err != nil {
 		return &DeleteStaffByIdResponse{}, err
 	}
@@ -105,9 +100,8 @@ func (s *server) DeleteStaffById(ctx context.Context, message *DeleteStaffByIdRe
 }
 
 func (s *server) UpdateStaffById(ctx context.Context, message *UpdateStaffByIdRequest) (*UpdateStaffByIdResponse, error) {
-	staffRepo := staffRepo.New(s.db)
-	staffDomain := staffDomain.New(staffRepo)
-	updatedStaff, err := staffDomain.UpdateStaffById(ctx, int(message.Id), staffModel.Staff{
+
+	updatedStaff, err := s.staffD.UpdateStaffById(ctx, int(message.Id), staffModel.Staff{
 		Name:  message.Name,
 		Email: message.Email,
 	})
@@ -124,9 +118,8 @@ func (s *server) UpdateStaffById(ctx context.Context, message *UpdateStaffByIdRe
 }
 
 func (s *server) GetAllStaff(ctx context.Context, message *GetAllStaffRequest) (*GetAllStaffResponse, error) {
-	staffRepo := staffRepo.New(s.db)
-	staffDomain := staffDomain.New(staffRepo)
-	getAllStaff, err := staffDomain.GetAllStaff(ctx)
+
+	getAllStaff, err := s.staffD.GetAllStaff(ctx)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to get list of staffs")
 	}

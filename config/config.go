@@ -9,6 +9,7 @@ type Config struct {
 	Database     Database
 	Server       Server
 	DBConnection DBConnection
+	ExternalAPI  ExternalAPI
 }
 
 type Database struct {
@@ -29,6 +30,10 @@ type DBConnection struct {
 type Server struct {
 	GRPCHost string `env:"GRPCHost" envDefault:"0.0.0.0"`
 	GRPCPort int    `env:"GRPCPort" envDefault:"9090"`
+}
+
+type ExternalAPI struct {
+	Host string `env:"Host" envDefault:"http://localhost:8080/api/v1/staff"`
 }
 
 func Load() (*Config, error) {
