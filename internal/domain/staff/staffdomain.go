@@ -42,6 +42,7 @@ func New(staffRepo staffRepository.Repository, staffExternal staffExternal.Staff
 	return s
 }
 
+// TODO: in rejected  case we need to call CreateStaff from domain -> external staff
 func (s *staffDomain) StaffCre(ctx context.Context, staffDetails staffModel.Staff) (staffModel.Staff, error) {
 
 	res, err := s.staffExternal.Validate(ctx, staffDetails.Name, staffDetails.Name, "12313212")
@@ -54,6 +55,7 @@ func (s *staffDomain) StaffCre(ctx context.Context, staffDetails staffModel.Staf
 	switch res.Status {
 	case REJECTED:
 		fmt.Println("need to created staff by phone number")
+		// TODO instead of returning staff object we need to call external staff to create the staff and phone number field is mandatory
 		var staffDBRes1 = staffModel.Staff{
 			Id:    1,
 			Name:  REJECTED,
@@ -62,12 +64,6 @@ func (s *staffDomain) StaffCre(ctx context.Context, staffDetails staffModel.Staf
 		return staffDBRes1, nil
 	case APPROVED:
 		fmt.Println("staff can be crated by normal flow")
-		var staffDBRes2 = staffModel.Staff{
-			Id:    1,
-			Name:  APPROVED,
-			Email: APPROVED,
-		}
-		return staffDBRes2, nil
 	default:
 		fmt.Println("staff can be crated by normal flow")
 	}

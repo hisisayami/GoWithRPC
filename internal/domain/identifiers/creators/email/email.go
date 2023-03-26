@@ -21,6 +21,7 @@ func New(cfg Config) *Creator {
 }
 
 func (v *Creator) CreateStaffAccount(ctx context.Context) error {
+	//TODO : call /create staff from staffExternal.StaffApi
 
 	return nil
 }

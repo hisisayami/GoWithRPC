@@ -124,7 +124,7 @@ func (mm *mockStaffExternal) Validate(ctx context.Context, fname string, lname s
 	}
 
 	res := staffClient.StaffInfoResponse{
-		Status:    "APPROVED",
+		Status:    "REJECTED",
 		Comment:   "",
 		SessionId: "122132",
 	}

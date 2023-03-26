@@ -29,8 +29,10 @@ func New(config creators.Config) Manager {
 	return m
 }
 
+// TODO: need to decide what we want to return
 func (m *manager) CreateStaffByEmail(ctx context.Context) error {
 	if m.validateNameFn(ctx, "name") {
+		//TODO: throw error for incorrect name use errors.New("") since this is new error we are creating
 		return nil
 	}
 	err := m.creators.Email.CreateStaffAccount(ctx)
@@ -40,8 +42,10 @@ func (m *manager) CreateStaffByEmail(ctx context.Context) error {
 	return nil
 }
 
+// TODO: need to decide what we want to return
 func (m *manager) CreateStaffByPhone(ctx context.Context) error {
 	if m.validateNameFn(ctx, "name") {
+		//TODO: throw error for incorrect name use errors.New("") since this is new error we are creating
 		return nil
 	}
 	err := m.creators.Phone.CreateStaffAccount(ctx)
@@ -52,5 +56,6 @@ func (m *manager) CreateStaffByPhone(ctx context.Context) error {
 }
 
 func (m *manager) validateName(ctx context.Context, name string) bool {
+	//TODO : validate firtname and lastname
 	return true
 }

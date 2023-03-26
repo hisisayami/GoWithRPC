@@ -26,6 +26,9 @@ const (
 	applicationJSON HeaderValue = "application/json"
 )
 
+// TODO: add CreateStaff func in interface and implement the CreateStaff func below like we did for Validate
+// here we are creating the client that makes http call to the endpoint we have in spring boot backend application
+// we would be calling this func in domain -> external staff
 type API interface {
 	Validate(ctx context.Context, input StaffInfoInput) (*StaffInfoResponse, error)
 }
