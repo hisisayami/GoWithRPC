@@ -10,6 +10,8 @@ import (
 
 	config "example.com/go-inventory-grpc/config"
 	staffExternal "example.com/go-inventory-grpc/internal/domain/external/staff"
+	staffManager "example.com/go-inventory-grpc/internal/domain/identifiers"
+	"example.com/go-inventory-grpc/internal/domain/identifiers/creators"
 	staffDomain "example.com/go-inventory-grpc/internal/domain/staff"
 	"example.com/go-inventory-grpc/internal/repository"
 	staffRepo "example.com/go-inventory-grpc/internal/repository/staff"
@@ -47,9 +49,13 @@ func main() {
 
 	staffExternal := staffExternal.New(staffClient)
 
+	staffManager := staffManager.New(creators.Config{
+		StaffExternal: staffExternal,
+	})
+
 	staffRepo := staffRepo.New(db)
 
-	staffD := staffDomain.New(staffRepo, staffExternal)
+	staffD := staffDomain.New(staffRepo, staffExternal, staffManager)
 
 	serv := server.New(db, cfg, staffD)
 

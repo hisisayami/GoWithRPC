@@ -6,6 +6,7 @@ import (
 
 	"example.com/go-inventory-grpc/ent"
 	staffExternal "example.com/go-inventory-grpc/internal/domain/external/staff"
+	staffManager "example.com/go-inventory-grpc/internal/domain/identifiers"
 	staffModel "example.com/go-inventory-grpc/internal/model"
 	staffRepository "example.com/go-inventory-grpc/internal/repository/staff"
 
@@ -28,12 +29,14 @@ type StaffDomain interface {
 type staffDomain struct {
 	staffRepo     staffRepository.Repository
 	staffExternal staffExternal.StaffApi
+	staffManager  staffManager.Manager
 }
 
-func New(staffRepo staffRepository.Repository, staffExternal staffExternal.StaffApi) StaffDomain {
+func New(staffRepo staffRepository.Repository, staffExternal staffExternal.StaffApi, staffManager staffManager.Manager) StaffDomain {
 	s := &staffDomain{
 		staffRepo:     staffRepo,
 		staffExternal: staffExternal,
+		staffManager:  staffManager,
 	}
 
 	return s
