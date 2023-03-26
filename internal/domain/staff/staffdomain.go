@@ -56,6 +56,7 @@ func (s *staffDomain) StaffCre(ctx context.Context, staffDetails staffModel.Staf
 	case REJECTED:
 		fmt.Println("need to created staff by phone number")
 		// TODO instead of returning staff object we need to call external staff to create the staff and phone number field is mandatory
+		// call CreateStaffByPhone from staff manager
 		var staffDBRes1 = staffModel.Staff{
 			Id:    1,
 			Name:  REJECTED,
@@ -65,7 +66,8 @@ func (s *staffDomain) StaffCre(ctx context.Context, staffDetails staffModel.Staf
 	case APPROVED:
 		fmt.Println("staff can be crated by normal flow")
 	default:
-		fmt.Println("staff can be crated by normal flow")
+		// TODO we need to call external staff to create the staff and email field is mandatory
+		// call CreateStaffByEmail from staff manager
 	}
 
 	staff, err := s.staffRepo.StaffCre(ctx, staffDetails)
