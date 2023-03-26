@@ -1,97 +1,66 @@
 package main
 
 import (
+	"context"
+	"fmt"
 	"log"
-	"net"
+	"net/http"
+	"os"
+	"time"
 
-	endpoint "example.com/go-inventory-grpc/internal/endpoint"
-	//repository "example.com/go-inventory-grpc/internal/repository"
 	config "example.com/go-inventory-grpc/config"
-
-	"google.golang.org/grpc"
-)
-
-const (
-	host     = "localhost"
-	port     = 5432
-	user     = "postgres"
-	password = "root"
-	dbname   = "inventory"
+	staffExternal "example.com/go-inventory-grpc/internal/domain/external/staff"
+	staffDomain "example.com/go-inventory-grpc/internal/domain/staff"
+	"example.com/go-inventory-grpc/internal/repository"
+	staffRepo "example.com/go-inventory-grpc/internal/repository/staff"
+	staffClient "example.com/go-inventory-grpc/internal/service/staff"
+	server "example.com/go-inventory-grpc/server"
 )
 
 func main() {
 
-	//ctx := context.Background()
+	ctx := context.Background()
 
-	//initiate Ent Client
 	log.Printf("Inventory Service Initilizing Database Connection.......")
-	client, err := config.NewEntClient()
+	cfg, err := config.Load()
 	if err != nil {
-		log.Printf("err : %s", err)
+		fmt.Println("failed to load in configuration: ", err)
+		os.Exit(1)
 	}
-	defer client.Close()
 
-	// psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
-	// 	"password=%s dbname=%s sslmode=disable",
-	// 	host, port, user, password, dbname)
+	postgresURL := cfg.Database.PostgresURL
+	if postgresURL == "" || postgresURL == "null" {
+		postgresURL = fmt.Sprintf("postgres://%s:%s@%s:%d/%s",
+			cfg.DBConnection.User, cfg.DBConnection.Password, cfg.DBConnection.Host, cfg.DBConnection.Port, cfg.DBConnection.Dbname)
+	}
 
-	// entClient, err := repository.NewPostgres(ctx, psqlInfo)
-	// if err != nil {
-	// 	log.Println("failed to setup ent client")
-	// }
-	// tx, err := entClient.Tx(ctx)
-
-	// repository.WithTx(ctx, tx)
-
-	//set the client to the variable defined in package config
-	//this will enable the client intance to be accessed anywhere through the accessor which is a function
-	//named GetClient
-	config.SetClient(client)
-	log.Printf("Inventory Service Successfully made Database Connection.......")
-
-	log.Printf("Inventory Service Starting.......")
-	lis, err := net.Listen("tcp", ":8000")
+	db, err := repository.NewPostgres(ctx, postgresURL)
 	if err != nil {
-		log.Fatalf("failed to listen on port 8000: %v", err)
+		fmt.Println("Failed to set up  DB")
 	}
 
-	e := endpoint.Server{}
+	staffRepo := staffRepo.New(db)
 
-	grpcServer := grpc.NewServer()
+	staffD := staffDomain.New(staffRepo)
 
-	endpoint.RegisterInventoryServiceServer(grpcServer, &e)
+	serv := server.New(db, cfg, staffD)
 
-	// msg, err := endpoint.Register(context.Background(), "hi")
-	// if err != nil {
-	// 	log.Println("failed to call register")
-	// }
+	httpClient := http.DefaultClient
+	httpClient.Timeout = 10 * time.Second
 
-	//fmt.Println(msg)
+	// staff client
+	staffClient := staffClient.New(httpClient, "")
 
-	log.Printf("Inventory Service Starting....at port...9000")
-	if err := grpcServer.Serve(lis); err != nil {
-		log.Fatalf("failed to serve grpc server over port 9000: %v", err)
+	_ = staffExternal.New(staffClient)
+
+	if err := serv.Start(); err != nil {
+		fmt.Println("Failed to start service")
 	}
-	log.Printf("Inventory Service Started Succesfully....at port...9000")
+
+	// go func() {
+	// 	if err := serv.Start(); err != nil {
+	// 		fmt.Println("Failed to start service")
+	// 	}
+	// }()
+
 }
-
-// func constructInterceptors() []grpc.UnaryServerInterceptor {
-
-// 	trasactionMiddleware := e
-// }
-
-// func main() {
-// 	log.Println("Starting listening on port 8080")
-// 	port := ":8080"
-
-// 	lis, err := net.Listen("tcp", port)
-// 	if err != nil {
-// 		log.Fatalf("failed to listen: %v", err)
-// 	}
-// 	log.Printf("Listening on %s", port)
-// 	srv := server.NewGRPCServer()
-
-// 	if err := srv.Serve(lis); err != nil {
-// 		log.Fatalf("failed to serve: %v", err)
-// 	}
-// }

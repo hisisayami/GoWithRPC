@@ -28,6 +28,9 @@ entgo.io/ent/schema/index
 github.com/agext/levenshtein
 # github.com/apparentlymart/go-textseg/v13 v13.0.0
 github.com/apparentlymart/go-textseg/v13/textseg
+# github.com/caarlos0/env/v6 v6.10.1
+## explicit
+github.com/caarlos0/env/v6
 # github.com/go-openapi/inflect v0.19.0
 github.com/go-openapi/inflect
 # github.com/golang/protobuf v1.5.2

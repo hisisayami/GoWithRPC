@@ -28,8 +28,6 @@ type InventoryServiceClient interface {
 	GetStaffById(ctx context.Context, in *GetStaffByIdRequest, opts ...grpc.CallOption) (*GetStaffByIdResponse, error)
 	DeleteStaffById(ctx context.Context, in *DeleteStaffByIdRequest, opts ...grpc.CallOption) (*DeleteStaffByIdResponse, error)
 	UpdateStaffById(ctx context.Context, in *UpdateStaffByIdRequest, opts ...grpc.CallOption) (*UpdateStaffByIdResponse, error)
-	CreateCategory(ctx context.Context, in *CreateCategoryRequest, opts ...grpc.CallOption) (*CreateCategoryResponse, error)
-	CreateProduct(ctx context.Context, in *CreateProductRequest, opts ...grpc.CallOption) (*CreateProductResponse, error)
 }
 
 type inventoryServiceClient struct {
@@ -94,24 +92,6 @@ func (c *inventoryServiceClient) UpdateStaffById(ctx context.Context, in *Update
 	return out, nil
 }
 
-func (c *inventoryServiceClient) CreateCategory(ctx context.Context, in *CreateCategoryRequest, opts ...grpc.CallOption) (*CreateCategoryResponse, error) {
-	out := new(CreateCategoryResponse)
-	err := c.cc.Invoke(ctx, "/inventorymanagement.InventoryService/CreateCategory", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *inventoryServiceClient) CreateProduct(ctx context.Context, in *CreateProductRequest, opts ...grpc.CallOption) (*CreateProductResponse, error) {
-	out := new(CreateProductResponse)
-	err := c.cc.Invoke(ctx, "/inventorymanagement.InventoryService/CreateProduct", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // InventoryServiceServer is the server API for InventoryService service.
 // All implementations must embed UnimplementedInventoryServiceServer
 // for forward compatibility
@@ -122,8 +102,6 @@ type InventoryServiceServer interface {
 	GetStaffById(context.Context, *GetStaffByIdRequest) (*GetStaffByIdResponse, error)
 	DeleteStaffById(context.Context, *DeleteStaffByIdRequest) (*DeleteStaffByIdResponse, error)
 	UpdateStaffById(context.Context, *UpdateStaffByIdRequest) (*UpdateStaffByIdResponse, error)
-	CreateCategory(context.Context, *CreateCategoryRequest) (*CreateCategoryResponse, error)
-	CreateProduct(context.Context, *CreateProductRequest) (*CreateProductResponse, error)
 	mustEmbedUnimplementedInventoryServiceServer()
 }
 
@@ -148,12 +126,6 @@ func (UnimplementedInventoryServiceServer) DeleteStaffById(context.Context, *Del
 }
 func (UnimplementedInventoryServiceServer) UpdateStaffById(context.Context, *UpdateStaffByIdRequest) (*UpdateStaffByIdResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateStaffById not implemented")
-}
-func (UnimplementedInventoryServiceServer) CreateCategory(context.Context, *CreateCategoryRequest) (*CreateCategoryResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateCategory not implemented")
-}
-func (UnimplementedInventoryServiceServer) CreateProduct(context.Context, *CreateProductRequest) (*CreateProductResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateProduct not implemented")
 }
 func (UnimplementedInventoryServiceServer) mustEmbedUnimplementedInventoryServiceServer() {}
 
@@ -276,42 +248,6 @@ func _InventoryService_UpdateStaffById_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
-func _InventoryService_CreateCategory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateCategoryRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(InventoryServiceServer).CreateCategory(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/inventorymanagement.InventoryService/CreateCategory",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(InventoryServiceServer).CreateCategory(ctx, req.(*CreateCategoryRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _InventoryService_CreateProduct_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateProductRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(InventoryServiceServer).CreateProduct(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/inventorymanagement.InventoryService/CreateProduct",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(InventoryServiceServer).CreateProduct(ctx, req.(*CreateProductRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // InventoryService_ServiceDesc is the grpc.ServiceDesc for InventoryService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -342,14 +278,6 @@ var InventoryService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateStaffById",
 			Handler:    _InventoryService_UpdateStaffById_Handler,
-		},
-		{
-			MethodName: "CreateCategory",
-			Handler:    _InventoryService_CreateCategory_Handler,
-		},
-		{
-			MethodName: "CreateProduct",
-			Handler:    _InventoryService_CreateProduct_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

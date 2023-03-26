@@ -10,9 +10,6 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
-	"example.com/go-inventory-grpc/ent/category"
-	"example.com/go-inventory-grpc/ent/orderdetails"
-	"example.com/go-inventory-grpc/ent/product"
 	"example.com/go-inventory-grpc/ent/staff"
 )
 
@@ -34,10 +31,7 @@ type OrderFunc func(*sql.Selector)
 // columnChecker returns a function indicates if the column exists in the given column.
 func columnChecker(table string) func(string) error {
 	checks := map[string]func(string) bool{
-		category.Table:     category.ValidColumn,
-		orderdetails.Table: orderdetails.ValidColumn,
-		product.Table:      product.ValidColumn,
-		staff.Table:        staff.ValidColumn,
+		staff.Table: staff.ValidColumn,
 	}
 	check, ok := checks[table]
 	if !ok {

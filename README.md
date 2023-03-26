@@ -1,16 +1,14 @@
 # inventory
 
-# Commands
-
-1. Generate protobuf files
+1. command to generate protobuf files
 #protoc --go_out=. --go-grpc_out=. ./proto/inventory.proto
 (Note: to run this command need to be in inventory/internal directory eg: /Users/rijanprajapati/Documents/GITHUB/GoProject/inventory/internal)
 
- 2. Initilizing go mod
+ 2. initilizing go mod
 
  #go mod init example.com/go-inventory-grpc
 
- 3. Generate protobuf
+ 3. generate protobuf
 protoc ./internal/proto/inventory.proto --go_out=./internal/endpoint --go_opt=paths=source_relative --go-grpc_out=./internal/endpoint --go-grpc_opt=paths=source_relative ./internal/proto/inventory.proto
 
 (Note: to run this command need to be in /inventory directory eg: /Users/rijanprajapati/Documents/GITHUB/GoProject/inventory)
@@ -23,18 +21,18 @@ protoc ./internal/proto/inventory.proto --go_out=./internal/endpoint --go_opt=pa
 #go run entgo.io/ent/cmd/ent init {{User}}
 #User is table name
 
-6. After adding field in the ent schemas use this command to generate ent again with added column or field
+6. after adding field in the ent file use this command to generate ent again with added column or field
 
 #go generate ./ent
 
-7. Install protoc 
+7. install protoc 
 
 # brew install protoc
 
-8. Install grpc
+8. install grpc
 
 # brew install grpc
-9. Install go 
+9. install go 
 
 # brew install hg
 # brew install go
@@ -106,13 +104,9 @@ go run entgo.io/ent/cmd/ent init Car Group
 
 
  export GOPATH=$HOME/go
- export PATH=$PATH:$GOPATH/bin
- go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
- go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+  export PATH=$PATH:$GOPATH/bin
+  go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+  go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 
-#required step to generate protoc
- export GOPATH=$HOME/go
-➜  GoWithRPC git:(inventory23) ✗ export PATH=$PATH:$GOPATH/bin
-➜  GoWithRPC git:(inventory23) ✗ go install google.golang.org/protobuf/cmd/protoc-gen-go@latest 
-➜  GoWithRPC git:(inventory23) ✗ go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
-➜  GoWithRPC git:(inventory23) ✗ protoc ./internal/proto/inventory.proto --go_out=./internal/endpoint --go_opt=paths=source_relative --go-grpc_out=./internal/endpoint --go-grpc_opt=paths=source_relative ./internal/proto/inventory.proto
+
+  # go mod tody for import issue

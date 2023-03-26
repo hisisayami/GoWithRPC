@@ -16,6 +16,7 @@ message CreateStaffResponse {
     int32 id = 1;
     string email = 2;
     string name = 3;
+
 }
 
 message GetStaffByIdRequest {
@@ -52,36 +53,6 @@ message GetAllStaffResponse{
     repeated Staff staffList = 1; 
 }
 
-message CreateCategoryRequest {
-    string categoryName = 1;
-    string categoryDescription = 2;
-}
-
-message CreateCategoryResponse {
-    int32 categoryId = 1;
-    string categoryName = 2;
-    string categoryDescription = 3;
-
-}
-
-message CreateProductRequest {
-    int32 categoryId = 1;
-    string productName = 2;
-    string productDescription = 3;
-    int32 productQuantity = 4;
-    int32 unitPrice = 5;
-}
-
-message CreateProductResponse {
-    int32 productId = 1;
-    int32 categoryId = 2;
-    string productName = 3;
-    string productDescription = 4;
-    int32 productQuantity = 5;
-    int32 unitPrice = 6;
-
-}
-
 message Staff{
     int32 id = 1;
     string email = 2;
@@ -96,11 +67,6 @@ service InventoryService {
     rpc GetStaffById (GetStaffByIdRequest) returns (GetStaffByIdResponse) {}
     rpc DeleteStaffById (DeleteStaffByIdRequest) returns (DeleteStaffByIdResponse) {}
     rpc UpdateStaffById (UpdateStaffByIdRequest) returns (UpdateStaffByIdResponse) {}
-
-    rpc CreateCategory (CreateCategoryRequest) returns (CreateCategoryResponse) {}
-
-    rpc CreateProduct (CreateProductRequest) returns (CreateProductResponse) {}
-
    
 
 }

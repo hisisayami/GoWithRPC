@@ -11,31 +11,28 @@ import (
 )
 
 type Repository interface {
-	StaffCreate(ctx context.Context, newStaff staffModel.Staff) (*ent.Staff, error)
-	//GetStaffByID(id int) (*ent.Staff, error)
+	StaffCre(ctx context.Context, newStaff staffModel.Staff) (*ent.Staff, error)
+	GetAllStaff(ctx context.Context) ([]*ent.Staff, error)
+	GetStaffByID(ctx context.Context, id int) (*ent.Staff, error)
+	UpdateStaff(ctx context.Context, user ent.Staff) (*ent.Staff, error)
+	DeleteStaffById(ctx context.Context, id int) error
+	UpdateStaffById(ctx context.Context, staffId int, user staffModel.Staff) (*ent.Staff, error)
 }
 
-type repository struct{}
-
-type StaffRepo struct {
-	ctx    context.Context
-	client *ent.Client
+type repository struct {
+	db repo.DB
 }
 
-func New() Repository {
-	return &repository{}
-}
-
-func New1(ctx context.Context, client *ent.Client) *StaffRepo {
-	return &StaffRepo{
-		ctx:    ctx,
-		client: client,
+func New(db repo.DB) Repository {
+	return &repository{
+		db: db,
 	}
 }
 
-func (r *StaffRepo) GetAllStaff() ([]*ent.Staff, error) {
+func (r *repository) GetAllStaff(ctx context.Context) ([]*ent.Staff, error) {
+	entC := r.db.GetEntClient()
 
-	staffs, err := r.client.Staff.Query().All(r.ctx)
+	staffs, err := entC.Staff.Query().All(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -43,9 +40,10 @@ func (r *StaffRepo) GetAllStaff() ([]*ent.Staff, error) {
 	return staffs, nil
 }
 
-func (r *StaffRepo) GetStaffByID(ctx context.Context, id int) (*ent.Staff, error) {
+func (r *repository) GetStaffByID(ctx context.Context, id int) (*ent.Staff, error) {
+	entC := r.db.GetEntClient()
 
-	user, err := r.client.Staff.Get(ctx, id)
+	user, err := entC.Staff.Get(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -53,50 +51,30 @@ func (r *StaffRepo) GetStaffByID(ctx context.Context, id int) (*ent.Staff, error
 	return user, nil
 }
 
-// func (r *StaffRepo) StaffGetByID(ctx context.Context, id int) (*ent.Staff, error) {
-// 	tx, err := repo.GetTx(ctx)
+func (r *repository) StaffCre(ctx context.Context, newStaff staffModel.Staff) (*ent.Staff, error) {
+	entC := r.db.GetEntClient()
+	// tx, err := r.db.NewTransaction(ctx)
+	// if err != nil {
+	// 	return nil, errors.Wrap(err, "failed to get transaction from context")
+	// }
 
-// 	user, err := tx.Staff.Query().Where(staff(staff.ID(id))).
-// 		Only(ctx)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-
-// 	return user, nil
-// }
-
-func (r *StaffRepo) StaffCreate1(newStaff staffModel.Staff) (*ent.Staff, error) {
-
-	newCreatedUser, err := r.client.Staff.Create().
-		SetEmail(newStaff.Email).
-		SetName(newStaff.Name).
-		Save(r.ctx)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return newCreatedUser, nil
-}
-
-func (r *repository) StaffCreate(ctx context.Context, newStaff staffModel.Staff) (*ent.Staff, error) {
-	tx, err := repo.GetTx(ctx)
-	newCreatedUser, err := tx.Staff.Create().
+	staffEntity, err := entC.Staff.Create().
 		SetEmail(newStaff.Email).
 		SetName(newStaff.Name).
 		Save(ctx)
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to create staff entity")
+		return nil, errors.Wrap(err, "Failed to create staff")
 	}
 
-	return newCreatedUser, nil
+	return staffEntity, nil
 }
 
-func (r *StaffRepo) UpdateStaff(user ent.Staff) (*ent.Staff, error) {
+func (r *repository) UpdateStaff(ctx context.Context, user ent.Staff) (*ent.Staff, error) {
+	entC := r.db.GetEntClient()
 
-	updatedUser, err := r.client.Staff.UpdateOneID(user.ID).
+	updatedUser, err := entC.Staff.UpdateOneID(user.ID).
 		SetEmail(user.Email).
-		SetName(user.Name).Save(r.ctx)
+		SetName(user.Name).Save(ctx)
 
 	if err != nil {
 		return nil, err
@@ -105,9 +83,10 @@ func (r *StaffRepo) UpdateStaff(user ent.Staff) (*ent.Staff, error) {
 	return updatedUser, nil
 }
 
-func (r *StaffRepo) DeleteStaffById(ctx context.Context, id int) error {
+func (r *repository) DeleteStaffById(ctx context.Context, id int) error {
+	entC := r.db.GetEntClient()
 
-	err := r.client.Staff.
+	err := entC.Staff.
 		DeleteOneID(id).
 		Exec(ctx)
 
@@ -118,10 +97,12 @@ func (r *StaffRepo) DeleteStaffById(ctx context.Context, id int) error {
 	return nil
 }
 
-func (r *StaffRepo) UpdateStaffById(ctx context.Context, staffId int, user staffModel.Staff) (*ent.Staff, error) {
-	updateStaffById, err := r.client.Staff.UpdateOneID(staffId).
+func (r *repository) UpdateStaffById(ctx context.Context, staffId int, user staffModel.Staff) (*ent.Staff, error) {
+	entC := r.db.GetEntClient()
+
+	updateStaffById, err := entC.Staff.UpdateOneID(staffId).
 		SetEmail(user.Email).
-		SetName(user.Name).Save(r.ctx)
+		SetName(user.Name).Save(ctx)
 	if err != nil {
 		return nil, errors.Wrap(err, "repo failed to update staff entity")
 	}

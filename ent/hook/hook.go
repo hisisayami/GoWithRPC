@@ -9,45 +9,6 @@ import (
 	"example.com/go-inventory-grpc/ent"
 )
 
-// The CategoryFunc type is an adapter to allow the use of ordinary
-// function as Category mutator.
-type CategoryFunc func(context.Context, *ent.CategoryMutation) (ent.Value, error)
-
-// Mutate calls f(ctx, m).
-func (f CategoryFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.CategoryMutation)
-	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.CategoryMutation", m)
-	}
-	return f(ctx, mv)
-}
-
-// The OrderDetailsFunc type is an adapter to allow the use of ordinary
-// function as OrderDetails mutator.
-type OrderDetailsFunc func(context.Context, *ent.OrderDetailsMutation) (ent.Value, error)
-
-// Mutate calls f(ctx, m).
-func (f OrderDetailsFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.OrderDetailsMutation)
-	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.OrderDetailsMutation", m)
-	}
-	return f(ctx, mv)
-}
-
-// The ProductFunc type is an adapter to allow the use of ordinary
-// function as Product mutator.
-type ProductFunc func(context.Context, *ent.ProductMutation) (ent.Value, error)
-
-// Mutate calls f(ctx, m).
-func (f ProductFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.ProductMutation)
-	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.ProductMutation", m)
-	}
-	return f(ctx, mv)
-}
-
 // The StaffFunc type is an adapter to allow the use of ordinary
 // function as Staff mutator.
 type StaffFunc func(context.Context, *ent.StaffMutation) (ent.Value, error)

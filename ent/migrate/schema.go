@@ -8,59 +8,6 @@ import (
 )
 
 var (
-	// CategoriesColumns holds the columns for the "categories" table.
-	CategoriesColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "category_id", Type: field.TypeInt},
-		{Name: "category_name", Type: field.TypeString},
-		{Name: "category_description", Type: field.TypeString},
-	}
-	// CategoriesTable holds the schema information for the "categories" table.
-	CategoriesTable = &schema.Table{
-		Name:       "categories",
-		Columns:    CategoriesColumns,
-		PrimaryKey: []*schema.Column{CategoriesColumns[0]},
-	}
-	// OrderDetailsColumns holds the columns for the "order_details" table.
-	OrderDetailsColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "order_detail_id", Type: field.TypeInt},
-		{Name: "order_id", Type: field.TypeInt},
-		{Name: "product_id", Type: field.TypeInt},
-		{Name: "unit_price", Type: field.TypeInt, Default: 0},
-		{Name: "quantity", Type: field.TypeInt, Default: 0},
-		{Name: "total_price", Type: field.TypeInt, Default: 0},
-	}
-	// OrderDetailsTable holds the schema information for the "order_details" table.
-	OrderDetailsTable = &schema.Table{
-		Name:       "order_details",
-		Columns:    OrderDetailsColumns,
-		PrimaryKey: []*schema.Column{OrderDetailsColumns[0]},
-	}
-	// ProductsColumns holds the columns for the "products" table.
-	ProductsColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "product_id", Type: field.TypeInt},
-		{Name: "product_name", Type: field.TypeString},
-		{Name: "product_description", Type: field.TypeString},
-		{Name: "product_quantity", Type: field.TypeInt},
-		{Name: "unit_price", Type: field.TypeInt},
-		{Name: "category_products", Type: field.TypeInt, Nullable: true},
-	}
-	// ProductsTable holds the schema information for the "products" table.
-	ProductsTable = &schema.Table{
-		Name:       "products",
-		Columns:    ProductsColumns,
-		PrimaryKey: []*schema.Column{ProductsColumns[0]},
-		ForeignKeys: []*schema.ForeignKey{
-			{
-				Symbol:     "products_categories_products",
-				Columns:    []*schema.Column{ProductsColumns[6]},
-				RefColumns: []*schema.Column{CategoriesColumns[0]},
-				OnDelete:   schema.SetNull,
-			},
-		},
-	}
 	// StaffsColumns holds the columns for the "staffs" table.
 	StaffsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -75,13 +22,9 @@ var (
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
-		CategoriesTable,
-		OrderDetailsTable,
-		ProductsTable,
 		StaffsTable,
 	}
 )
 
 func init() {
-	ProductsTable.ForeignKeys[0].RefTable = CategoriesTable
 }

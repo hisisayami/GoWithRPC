@@ -3,7 +3,6 @@
 package ent
 
 import (
-	"example.com/go-inventory-grpc/ent/orderdetails"
 	"example.com/go-inventory-grpc/ent/schema"
 	"example.com/go-inventory-grpc/ent/staff"
 )
@@ -12,20 +11,6 @@ import (
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
-	orderdetailsFields := schema.OrderDetails{}.Fields()
-	_ = orderdetailsFields
-	// orderdetailsDescUnitPrice is the schema descriptor for UnitPrice field.
-	orderdetailsDescUnitPrice := orderdetailsFields[3].Descriptor()
-	// orderdetails.DefaultUnitPrice holds the default value on creation for the UnitPrice field.
-	orderdetails.DefaultUnitPrice = orderdetailsDescUnitPrice.Default.(int)
-	// orderdetailsDescQuantity is the schema descriptor for Quantity field.
-	orderdetailsDescQuantity := orderdetailsFields[4].Descriptor()
-	// orderdetails.DefaultQuantity holds the default value on creation for the Quantity field.
-	orderdetails.DefaultQuantity = orderdetailsDescQuantity.Default.(int)
-	// orderdetailsDescTotalPrice is the schema descriptor for TotalPrice field.
-	orderdetailsDescTotalPrice := orderdetailsFields[5].Descriptor()
-	// orderdetails.DefaultTotalPrice holds the default value on creation for the TotalPrice field.
-	orderdetails.DefaultTotalPrice = orderdetailsDescTotalPrice.Default.(int)
 	staffFields := schema.Staff{}.Fields()
 	_ = staffFields
 	// staffDescEmail is the schema descriptor for email field.
