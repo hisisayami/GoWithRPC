@@ -24,7 +24,7 @@ func main() {
 	//ctx := context.Background()
 
 	//initiate Ent Client
-	log.Printf("Inventory Service Initilizing Database Connection.......")
+	log.Printf("<<<<<<< Inventory Service Initilizing Database Connection >>>>>>")
 	client, err := config.NewEntClient()
 	if err != nil {
 		log.Printf("err : %s", err)
@@ -47,7 +47,7 @@ func main() {
 	//this will enable the client intance to be accessed anywhere through the accessor which is a function
 	//named GetClient
 	config.SetClient(client)
-	log.Printf("Inventory Service Successfully made Database Connection.......")
+	log.Printf("<<<<<<< Inventory Service Successfully made Database Connection.......")
 
 	log.Printf("Inventory Service Starting.......")
 	lis, err := net.Listen("tcp", ":8000")
