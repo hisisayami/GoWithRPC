@@ -1,0 +1,72 @@
+syntax = "proto3";
+package inventorymanagement;
+
+option go_package = "/endpoint";
+
+message Message {
+    string body = 1;
+}
+
+message CreateStaffRequest {
+    string email = 1;
+    string name = 2;
+}
+
+message CreateStaffResponse {
+    int32 id = 1;
+    string email = 2;
+    string name = 3;
+
+}
+
+message GetStaffByIdRequest {
+    int32 id = 1;
+}
+
+message GetStaffByIdResponse {
+    int32 id = 1;
+    string email = 2;
+    string name = 3;
+}
+
+message DeleteStaffByIdRequest {
+    int32 id = 1;
+}
+
+message DeleteStaffByIdResponse {}
+
+message UpdateStaffByIdRequest{
+    int32 id = 1;
+    string email = 2;
+    string name = 3;
+}
+
+message UpdateStaffByIdResponse{
+    int32 id = 1;
+    string email = 2;
+    string name = 3;
+}
+
+message GetAllStaffRequest{}
+
+message GetAllStaffResponse{
+    repeated Staff staffList = 1; 
+}
+
+message Staff{
+    int32 id = 1;
+    string email = 2;
+    string name = 3;
+}
+
+
+service InventoryService {
+    rpc Register (Message) returns (Message) {}
+    rpc CreateStaff (CreateStaffRequest) returns (CreateStaffResponse) {}
+    rpc GetAllStaff (GetAllStaffRequest) returns (GetAllStaffResponse) {}
+    rpc GetStaffById (GetStaffByIdRequest) returns (GetStaffByIdResponse) {}
+    rpc DeleteStaffById (DeleteStaffByIdRequest) returns (DeleteStaffByIdResponse) {}
+    rpc UpdateStaffById (UpdateStaffByIdRequest) returns (UpdateStaffByIdResponse) {}
+   
+
+}
